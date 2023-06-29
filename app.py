@@ -33,7 +33,7 @@ def main():
 
     url = st.text_input("YouTube URL:")
     language = st.selectbox(
-        "Select Language:", ["English", "Spanish", "French"]
+        "Select Language:", ["en", "fr"]
     )  # Add more options if needed
 
     if st.button("Extract"):
@@ -42,9 +42,10 @@ def main():
             if video_id:
                 subtitles = extract_subtitles(video_id, language.lower())
                 if subtitles:
-                    st.success("Subtitles extracted successfully!")
-                    for sub in subtitles:
-                        st.write(sub["text"])
+                    text = extract_text(subtitles)
+                    if text:
+                        st.success("Subtitles extracted successfully!")
+                        st.write(text)
                 else:
                     st.warning(
                         f"No {language} subtitles found for the given video URL."
