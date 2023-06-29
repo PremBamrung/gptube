@@ -1,6 +1,9 @@
 import re
+from io import BytesIO
 
+import requests
 import streamlit as st
+from PIL import Image
 from youtube_transcript_api import YouTubeTranscriptApi
 
 
@@ -27,6 +30,16 @@ def extract_text(subs):
     return text
 
 
+def extract_thumbnail(vid_id):
+    thumbnail_url = f"https://img.youtube.com/vi/{vid_id}/maxresdefault.jpg"
+    try:
+        response = requests.get(thumbnail_url)
+        img = Image.open(BytesIO(response.content))
+        return img
+    except:
+        st.write("Error displaying thumbnail.")
+
+
 def main():
     st.title("Subtitle Extractor")
     st.write("Enter a YouTube video URL and select the language to extract subtitles:")
@@ -45,6 +58,8 @@ def main():
                     text = extract_text(subtitles)
                     if text:
                         st.success("Subtitles extracted successfully!")
+                        img_thumbnail = extract_thumbnail(video_id)
+                        st.image(img_thumbnail)
                         st.write(text)
                 else:
                     st.warning(
@@ -57,8 +72,10 @@ def main():
 
 
 if __name__ == "__main__":
-    url = "https://www.youtube.com/watch?v=g-SC1VxwpEw"
-    vid_id = extract_video_id(url)
-    subs = extract_subtitles(vid_id, language="en")
-    txt = extract_text(subs)
-    print(txt)
+    # url = "https://www.youtube.com/watch?v=g-SC1VxwpEw"
+    # vid_id = extract_video_id(url)
+    # subs = extract_subtitles(vid_id, language="en")
+    # txt = extract_text(subs)
+    # print(txt)
+
+    main()
