@@ -36,3 +36,4 @@ local/
 log/
 .storage/
 *.swp
+.env
